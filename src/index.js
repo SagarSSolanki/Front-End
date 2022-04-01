@@ -5,11 +5,24 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import { render } from "react-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
+import Product from "./components/product";
+import Cart from "./components/cart";
 
 const rootElement = document.getElementById("root");
 render(
-  <App/>,
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="product" element={<Product />} />
+      <Route path="cart" element={<Cart />} />
+    </Routes>
+  </BrowserRouter>,
   rootElement
 );
 
