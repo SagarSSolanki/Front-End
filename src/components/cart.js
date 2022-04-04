@@ -5,6 +5,8 @@ import axios from 'axios'
 export default function Cart() {
   const [data, setData] = useState([]);
 
+  const str = localStorage.getItem("item_key") || ''
+
   const fetchData = async () => {
     const { data } = await axios.get("http://localhost:3002/item_total", {
         params: { str: str },
@@ -13,17 +15,13 @@ export default function Cart() {
     setData(data);
   };
 
-  const [str, setStr] = useState("");
-
   useEffect(() => {
-    var item_value = sessionStorage.getItem("item_key");
-    setStr(item_value);
     fetchData();
-  });
-    
+  }, []);
+    debugger
   return (
       <div>
-        <h1>We have {str.length == 0 ? "no items" : str} </h1>
+        <h1>We have {str.length === 0 ? "no items" : str} </h1>
         <h1>Total Price: {data.total_price}</h1>
       </div>
   );

@@ -1,12 +1,12 @@
 import React from 'react'
 import axios from 'axios'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from "react-router-dom"
 
 
 export default function Product() {
   
-  const [str, setStr] = React.useState("");
+  const [str, setStr] = useState(localStorage.getItem("item_key") || '');
   const [data, setData] = useState([]);
   const fetchData = async () => {
     const { data } = await axios.get(
@@ -16,25 +16,29 @@ export default function Product() {
     setData(data);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
-
-  const products = data.map((data) => <div> 
-    <h3 key={data.id}>{data.name}</h3> <a key={data.id}>Price : {data.price} $ </a> <button onClick={() => setStr(str.length == 0 ? data.code : str.concat(", " + data.code))}>Add to Cart!</button> 
-    </div>);
+  const makeString = (item) => {
+    setStr(str.length === 0 ? item.code : str.concat(", " + item.code))
+  }
+    
 
   return (
     <div className="App">
       <h1>Available Products</h1>
       <h3>You have selected {str}</h3>
-      <p>
-        <strong>{products}</strong>
-      </p>
+      {data.map((item) => 
+        <div key={item.id}> 
+          <div>{item.name}</div> 
+          <div>Price : {item.price} $ </div> 
+          <button onClick={() => makeString(item)}>Add to Cart!</button> 
+        </div>
+      )}
       <br></br>
       <Link to="/cart">
-        <button onClick={() => sessionStorage.setItem("item_key", str)}>
+        <button onClick={() => localStorage.setItem("item_key", str)}>
           View Cart!
         </button>
       </Link>
