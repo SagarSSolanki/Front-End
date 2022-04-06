@@ -3,6 +3,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import store from './app/store'
+import { Provider } from 'react-redux'
+
 import { render } from "react-dom";
 import {
   BrowserRouter,
@@ -15,13 +18,15 @@ import Cart from "./components/cart";
 
 const rootElement = document.getElementById("root");
 render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="product" element={<Product />} />
-      <Route path="cart" element={<Cart />} />
-    </Routes>
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}/>
+          <Route path="product" element={<Product />}/>
+          <Route path="cart" element={<Cart />}/>
+        </Routes>
+    </BrowserRouter>
+  </Provider>,
   rootElement
 );
 

@@ -3,10 +3,16 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link } from "react-router-dom"
 
+import { useSelector, useDispatch } from 'react-redux'
+import { addItem, removeItem } from '../features/counter/strSlice'
+
 
 export default function Product() {
+
+  const hash = useSelector(state => state.hash.value)
+  console.log(hash)
+  const dispatch = useDispatch()
   
-  const [str, setStr] = useState(localStorage.getItem("item_key") || '');
   const [data, setData] = useState([]);
   const fetchData = async () => {
     const { data } = await axios.get(
@@ -19,26 +25,26 @@ export default function Product() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const makeString = (item) => {
-    setStr(str.length === 0 ? item.code : str.concat(", " + item.code))
-  }
     
 
   return (
     <div className="App">
-      <h1>Available Products</h1>
-      <h3>You have selected {str}</h3>
+      <h1 style={{ color: "pink" }}>Available Products</h1>
       {data.map((item) => 
         <div key={item.id}> 
           <div>{item.name}</div> 
           <div>Price : {item.price} $ </div> 
-          <button onClick={() => makeString(item)}>Add to Cart!</button> 
+          {hash[item.code] > 0 ? 
+            <div> 
+              <button onClick={() => dispatch(addItem(item.code))}>Add</button> 
+              <button onClick={() => dispatch(removeItem(item.code))}>Remove</button> 
+            </div>: 
+            <button onClick={() => dispatch(addItem(item.code))}>Add</button>}
         </div>
       )}
       <br></br>
       <Link to="/cart">
-        <button onClick={() => localStorage.setItem("item_key", str)}>
+        <button style={{ backgroundColor: "white" }}>
           View Cart!
         </button>
       </Link>
